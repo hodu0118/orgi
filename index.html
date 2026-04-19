@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>🍊 오렌지 타우니 | Minecraft Server</title>
+<title>🍊 오렌지 타우니 | Minecraft Towny Server</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
@@ -18,7 +18,6 @@
   --cream:#fff8ee;
   --green:#5db85d;
   --green2:#3a8f3a;
-  --sky:#5ba3d9;
   --dirt:#8b6340;
   --stone:#888;
 }
@@ -29,406 +28,136 @@ body{
   color:var(--cream);
   font-family:'Noto Sans KR',sans-serif;
   overflow-x:hidden;
-  image-rendering:pixelated;
 }
-
-/* PIXEL CURSOR */
 body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect x='0' y='0' width='4' height='4' fill='%23ff6b00'/%3E%3Crect x='4' y='4' width='4' height='4' fill='%23ff6b00'/%3E%3Crect x='8' y='8' width='4' height='4' fill='%23ff6b00'/%3E%3C/svg%3E") 0 0, crosshair;}
 
-/* ─── PIXEL FONT HELPER ─── */
-.pixel{font-family:'Press Start 2P',monospace;}
-
-/* ─── STARS BG ─── */
 .stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
-.star{position:absolute;background:rgba(255,200,100,.6);animation:twinkle var(--d,2s) infinite;}
-@keyframes twinkle{0%,100%{opacity:.2;}50%{opacity:1;}}
+.star{position:absolute;background:rgba(255,200,100,.7);animation:twinkle var(--d,2s) infinite;}
+@keyframes twinkle{0%,100%{opacity:.15;}50%{opacity:1;}}
 
-/* ─── NAV ─── */
+/* NAV */
 nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
+  position:fixed;top:0;left:0;right:0;z-index:200;
   display:flex;justify-content:space-between;align-items:center;
-  padding:.8rem 2rem;
-  background:rgba(26,14,0,.85);
+  padding:.75rem 2rem;
+  background:rgba(26,14,0,.92);
   border-bottom:3px solid var(--orange);
-  backdrop-filter:blur(8px);
-  image-rendering:pixelated;
+  backdrop-filter:blur(10px);
 }
 .nav-logo{
   font-family:'Press Start 2P',monospace;
-  font-size:.75rem;
-  color:var(--orange2);
-  text-shadow:2px 2px var(--dark);
-  display:flex;align-items:center;gap:.7rem;
+  font-size:.7rem;color:var(--orange2);
+  text-shadow:2px 2px 0 var(--dark);
+  display:flex;align-items:center;gap:.6rem;
 }
-.nav-logo .dot{
-  width:16px;height:16px;
-  background:var(--orange);
-  border:2px solid var(--orange2);
-  display:inline-block;
-  animation:blink .9s step-start infinite;
-}
+.nav-blink{width:14px;height:14px;background:var(--orange);border:2px solid var(--orange2);display:inline-block;animation:blink .9s step-start infinite;}
 @keyframes blink{50%{opacity:0;}}
-.nav-links{display:flex;gap:1.5rem;list-style:none;}
-.nav-links a{
-  font-family:'Press Start 2P',monospace;
-  font-size:.5rem;
-  color:var(--orange3);
-  text-decoration:none;
-  padding:.4rem .6rem;
-  border:1px solid transparent;
-  transition:all .15s steps(1);
-}
-.nav-links a:hover{
-  background:var(--orange);
-  color:var(--dark);
-  border-color:var(--orange2);
-}
-.ip-badge{
-  font-family:'Press Start 2P',monospace;
-  font-size:.5rem;
-  background:var(--orange);
-  color:var(--dark);
-  padding:.4rem .8rem;
-  border:2px solid var(--orange2);
-  cursor:pointer;
-  transition:transform .1s steps(1);
-  position:relative;
-}
-.ip-badge:hover{transform:translate(-2px,-2px);}
-.ip-badge:hover::after{
-  content:'복사됨!';
-  position:absolute;top:-2rem;left:50%;transform:translateX(-50%);
-  background:var(--green);color:#fff;
-  font-size:.45rem;padding:.3rem .5rem;white-space:nowrap;
-}
+.nav-links{display:flex;gap:1.2rem;list-style:none;}
+.nav-links a{font-family:'Press Start 2P',monospace;font-size:.45rem;color:var(--orange3);text-decoration:none;padding:.35rem .55rem;border:1px solid transparent;transition:all .1s steps(1);}
+.nav-links a:hover{background:var(--orange);color:var(--dark);border-color:var(--orange2);}
+.nav-ip{font-family:'Press Start 2P',monospace;font-size:.45rem;background:var(--orange);color:var(--dark);padding:.4rem .8rem;border:2px solid var(--orange2);cursor:pointer;box-shadow:3px 3px 0 var(--dark2);transition:transform .1s steps(1),box-shadow .1s steps(1);}
+.nav-ip:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--dark2);}
 
-/* ─── HERO ─── */
-.hero{
-  min-height:100vh;
-  display:flex;flex-direction:column;
-  justify-content:center;align-items:center;
-  text-align:center;
-  padding:6rem 2rem 2rem;
-  position:relative;
-  overflow:hidden;
-}
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:7rem 2rem 6rem;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#0d2240 0%,#1a1a30 45%,#1a0e00 100%);z-index:0;}
 
-/* pixel sky gradient */
-.hero::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(180deg,
-    #1a3a5c 0%,
-    #1a2a4a 30%,
-    #1a1a30 55%,
-    #1a0e00 100%);
-  z-index:0;
-}
+.sun{position:absolute;top:8%;right:10%;width:72px;height:72px;background:var(--orange2);border:4px solid var(--orange3);box-shadow:0 0 0 4px var(--orange),0 0 50px rgba(255,154,60,.5);z-index:1;animation:sunFloat 5s ease-in-out infinite;}
+@keyframes sunFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
 
-/* PIXEL GROUND */
-.ground{
-  position:absolute;bottom:0;left:0;right:0;
-  z-index:2;
-}
-.ground-layer{width:100%;height:32px;display:flex;}
-.block{flex:1;min-width:32px;max-width:32px;height:32px;border:1px solid rgba(0,0,0,.3);}
-.b-grass{background:var(--green2);border-top:8px solid var(--green);}
-.b-dirt{background:var(--dirt);}
-.b-stone{background:var(--stone);}
-
-/* SUN */
-.sun{
-  position:absolute;top:10%;right:12%;
-  width:80px;height:80px;
-  background:var(--orange2);
-  border:4px solid var(--orange3);
-  box-shadow:0 0 0 4px var(--orange),0 0 40px var(--orange2);
-  z-index:1;
-  animation:sunFloat 4s ease-in-out infinite;
-}
-@keyframes sunFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
-
-/* CLOUDS */
 .cloud{position:absolute;z-index:1;animation:cloudDrift linear infinite;}
-.cloud-block{
-  display:inline-block;
-  background:rgba(255,255,255,.18);
-  border:2px solid rgba(255,255,255,.1);
-}
-@keyframes cloudDrift{from{transform:translateX(-200px);}to{transform:translateX(110vw);}}
+.cb{display:block;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.08);}
+@keyframes cloudDrift{from{transform:translateX(-220px);}to{transform:translateX(110vw);}}
 
-/* HERO TEXT */
+.ground{position:absolute;bottom:0;left:0;right:0;z-index:2;}
+.ground-row{width:100%;height:28px;display:flex;}
+.bl{flex:1;min-width:28px;max-width:28px;height:28px;border:1px solid rgba(0,0,0,.25);}
+.bg{background:var(--green2);border-top:7px solid var(--green);}
+.bd{background:var(--dirt);}
+.bs{background:var(--stone);}
+
 .hero-content{position:relative;z-index:3;}
-.hero-badge{
-  font-family:'Press Start 2P',monospace;
-  font-size:.55rem;
-  background:var(--orange);
-  color:var(--dark);
-  padding:.4rem 1rem;
-  display:inline-block;
-  margin-bottom:1.5rem;
-  animation:fadeDown .6s ease both;
-}
-.hero-title{
-  font-family:'Press Start 2P',monospace;
-  font-size:clamp(1.2rem,4vw,2.5rem);
-  line-height:1.6;
-  color:var(--orange2);
-  text-shadow:4px 4px 0 var(--dark),6px 6px 0 rgba(255,107,0,.3);
-  margin-bottom:.5rem;
-  animation:fadeDown .6s .1s ease both;
-}
+.hero-badge{font-family:'Press Start 2P',monospace;font-size:.5rem;background:var(--orange);color:var(--dark);padding:.4rem 1rem;display:inline-block;margin-bottom:1.5rem;box-shadow:3px 3px 0 var(--dark2);animation:fadeUp .6s ease both;}
+.hero-title{font-family:'Press Start 2P',monospace;font-size:clamp(1.1rem,4vw,2.4rem);line-height:1.7;color:var(--orange2);text-shadow:4px 4px 0 var(--dark),7px 7px 0 rgba(255,107,0,.25);margin-bottom:.5rem;animation:fadeUp .6s .1s ease both;}
 .hero-title span{color:var(--orange3);}
-.hero-sub{
-  font-size:.9rem;
-  color:rgba(255,248,238,.65);
-  margin-bottom:2.5rem;
-  line-height:1.8;
-  animation:fadeDown .6s .2s ease both;
-}
-.hero-buttons{
-  display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;
-  animation:fadeDown .6s .3s ease both;
-}
-.btn{
-  font-family:'Press Start 2P',monospace;
-  font-size:.6rem;
-  padding:.9rem 1.8rem;
-  text-decoration:none;
-  display:inline-block;
-  transition:transform .1s steps(1),box-shadow .1s steps(1);
-}
-.btn-primary{
-  background:var(--orange);
-  color:var(--dark);
-  border:3px solid var(--orange2);
-  box-shadow:4px 4px 0 var(--dark2);
-}
-.btn-primary:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--dark2);}
-.btn-secondary{
-  background:transparent;
-  color:var(--orange2);
-  border:3px solid var(--orange);
-  box-shadow:4px 4px 0 var(--dark2);
-}
-.btn-secondary:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--dark2);}
+.hero-sub{font-size:.88rem;color:rgba(255,248,238,.6);margin-bottom:2.5rem;line-height:2;animation:fadeUp .6s .2s ease both;}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;animation:fadeUp .6s .3s ease both;}
+.btn{font-family:'Press Start 2P',monospace;font-size:.55rem;padding:.85rem 1.6rem;text-decoration:none;display:inline-block;transition:transform .1s steps(1),box-shadow .1s steps(1);}
+.btn-a{background:var(--orange);color:var(--dark);border:3px solid var(--orange2);box-shadow:4px 4px 0 var(--dark2);}
+.btn-a:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--dark2);}
+.btn-b{background:transparent;color:var(--orange2);border:3px solid var(--orange);box-shadow:4px 4px 0 var(--dark2);}
+.btn-b:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--dark2);}
 
-/* ONLINE COUNTER */
-.online-bar{
-  display:inline-flex;align-items:center;gap:.8rem;
-  margin-top:2rem;
-  background:rgba(255,107,0,.1);
-  border:2px solid var(--orange);
-  padding:.6rem 1.2rem;
-  animation:fadeDown .6s .4s ease both;
-}
-.online-dot{width:10px;height:10px;background:var(--green);box-shadow:0 0 8px var(--green);animation:blink .8s step-start infinite;}
-.online-text{font-family:'Press Start 2P',monospace;font-size:.5rem;color:var(--orange3);}
-.online-count{color:var(--green);}
+.status-bar{display:inline-flex;align-items:center;gap:.8rem;margin-top:2rem;background:rgba(255,107,0,.08);border:2px solid var(--orange);padding:.6rem 1.3rem;animation:fadeUp .6s .4s ease both;}
+.s-dot{width:10px;height:10px;background:var(--green);box-shadow:0 0 8px var(--green);animation:blink .9s step-start infinite;}
+.s-text{font-family:'Press Start 2P',monospace;font-size:.48rem;color:var(--orange3);}
 
-/* PIXEL DIVIDER */
-.px-divider{
-  width:100%;height:8px;
-  background:repeating-linear-gradient(90deg,var(--orange) 0,var(--orange) 8px,var(--orange2) 8px,var(--orange2) 16px);
-}
+/* DIVIDER */
+.divider{width:100%;height:8px;background:repeating-linear-gradient(90deg,var(--orange) 0,var(--orange) 8px,var(--orange2) 8px,var(--orange2) 16px);}
 
-/* ─── SECTIONS COMMON ─── */
+/* SECTIONS */
 section{position:relative;z-index:5;padding:5rem 2rem;}
-.section-title{
-  font-family:'Press Start 2P',monospace;
-  font-size:clamp(.8rem,2vw,1.1rem);
-  color:var(--orange2);
-  text-align:center;
-  margin-bottom:.5rem;
-  text-shadow:3px 3px 0 var(--dark2);
-}
-.section-line{
-  width:60px;height:4px;
-  background:var(--orange);
-  margin:.7rem auto 3rem;
-}
+.sec-title{font-family:'Press Start 2P',monospace;font-size:clamp(.75rem,2vw,1rem);color:var(--orange2);text-align:center;margin-bottom:.5rem;text-shadow:3px 3px 0 var(--dark2);}
+.sec-line{width:56px;height:4px;background:var(--orange);margin:.6rem auto 3rem;}
 
-/* ─── FEATURES ─── */
+/* FEATURES */
 .features-bg{background:var(--dark2);}
-.features-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:1.5rem;
-  max-width:1100px;margin:0 auto;
-}
-.feat-card{
-  background:var(--dark3);
-  border:3px solid var(--orange);
-  padding:2rem 1.5rem;
-  position:relative;
-  transition:transform .15s steps(2),box-shadow .15s steps(2);
-}
-.feat-card::after{
-  content:'';
-  position:absolute;bottom:-6px;right:-6px;
-  width:100%;height:100%;
-  background:var(--orange);
-  z-index:-1;
-}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.5rem;max-width:1100px;margin:0 auto;}
+.feat-card{background:var(--dark3);border:3px solid var(--orange);padding:2rem 1.5rem;position:relative;transition:transform .15s steps(2);}
+.feat-card::after{content:'';position:absolute;bottom:-5px;right:-5px;width:100%;height:100%;background:var(--orange);z-index:-1;}
 .feat-card:hover{transform:translate(-3px,-3px);}
-.feat-icon{
-  font-size:2.5rem;
-  display:block;
-  margin-bottom:1rem;
-  image-rendering:auto;
-}
-.feat-title{
-  font-family:'Press Start 2P',monospace;
-  font-size:.65rem;
-  color:var(--orange2);
-  margin-bottom:.8rem;
-  line-height:1.6;
-}
-.feat-desc{font-size:.82rem;color:rgba(255,248,238,.6);line-height:1.8;}
+.feat-icon{font-size:2.2rem;display:block;margin-bottom:1rem;image-rendering:auto;}
+.feat-title{font-family:'Press Start 2P',monospace;font-size:.6rem;color:var(--orange2);margin-bottom:.8rem;line-height:1.7;}
+.feat-desc{font-size:.8rem;color:rgba(255,248,238,.55);line-height:1.9;}
 
-/* ─── SERVER INFO ─── */
-.info-section{background:var(--dark);}
-.info-grid{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:3rem;max-width:900px;margin:0 auto;align-items:start;
-}
-.info-box{
-  background:var(--dark2);
-  border:3px solid var(--orange);
-  padding:2rem;
-}
-.info-box-title{
-  font-family:'Press Start 2P',monospace;
-  font-size:.65rem;
-  color:var(--orange3);
-  margin-bottom:1.5rem;
-  padding-bottom:.7rem;
-  border-bottom:2px solid var(--dark3);
-}
-.info-row{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:.6rem 0;
-  border-bottom:1px solid rgba(255,107,0,.1);
-  font-size:.8rem;
-}
-.info-row:last-child{border-bottom:none;}
-.info-label{color:rgba(255,248,238,.4);font-size:.75rem;}
-.info-val{color:var(--orange2);font-family:'Press Start 2P',monospace;font-size:.55rem;}
-.info-val.green{color:var(--green);}
-.info-val.orange{color:var(--orange);}
+/* INFO */
+.info-bg{background:var(--dark);}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;max-width:920px;margin:0 auto;align-items:start;}
+.ibox{background:var(--dark2);border:3px solid var(--orange);padding:1.8rem;}
+.ibox-title{font-family:'Press Start 2P',monospace;font-size:.6rem;color:var(--orange3);margin-bottom:1.3rem;padding-bottom:.6rem;border-bottom:2px solid var(--dark3);}
+.irow{display:flex;justify-content:space-between;align-items:center;padding:.55rem 0;border-bottom:1px solid rgba(255,107,0,.1);font-size:.78rem;}
+.irow:last-child{border-bottom:none;}
+.ilabel{color:rgba(255,248,238,.38);font-size:.72rem;}
+.ival{color:var(--orange2);font-family:'Press Start 2P',monospace;font-size:.52rem;}
+.ival.g{color:var(--green);}
+.ival.o{color:var(--orange);}
 
-/* COPY IP BOX */
-.copy-box{
-  background:var(--dark2);border:3px solid var(--orange);
-  padding:2rem;text-align:center;margin-top:1.5rem;
-}
-.copy-ip{
-  font-family:'Press Start 2P',monospace;
-  font-size:clamp(.7rem,2vw,1rem);
-  color:var(--orange3);
-  background:var(--dark3);
-  border:2px solid var(--orange);
-  padding:1rem 1.5rem;
-  display:block;
-  margin:1rem auto;
-  cursor:pointer;
-  transition:all .1s steps(1);
-  letter-spacing:.05em;
-}
-.copy-ip:hover{background:var(--orange);color:var(--dark);}
-.copy-hint{font-size:.7rem;color:rgba(255,248,238,.35);font-family:'Press Start 2P',monospace;font-size:.45rem;}
+.ip-box{background:var(--dark2);border:3px solid var(--orange);padding:1.8rem;text-align:center;}
+.ip-code{font-family:'Press Start 2P',monospace;font-size:clamp(.65rem,2vw,.95rem);color:var(--orange3);background:var(--dark3);border:2px solid var(--orange);padding:.9rem 1.3rem;display:block;margin:1rem auto;cursor:pointer;transition:all .1s steps(1);letter-spacing:.04em;}
+.ip-code:hover{background:var(--orange);color:var(--dark);}
+.ip-hint{font-family:'Press Start 2P',monospace;font-size:.4rem;color:rgba(255,248,238,.3);}
 
-/* ─── RULES ─── */
+/* RULES */
 .rules-bg{background:var(--dark2);}
-.rules-list{
-  max-width:700px;margin:0 auto;
-  list-style:none;
-  display:flex;flex-direction:column;gap:1rem;
-}
-.rules-list li{
-  display:flex;align-items:flex-start;gap:1rem;
-  background:var(--dark3);
-  border-left:4px solid var(--orange);
-  padding:1rem 1.2rem;
-  font-size:.85rem;
-  line-height:1.7;
-  color:rgba(255,248,238,.7);
-}
-.rules-list li .rnum{
-  font-family:'Press Start 2P',monospace;
-  font-size:.55rem;
-  color:var(--orange);
-  flex-shrink:0;
-  margin-top:.15rem;
-}
+.rules-list{max-width:720px;margin:0 auto;list-style:none;display:flex;flex-direction:column;gap:.9rem;}
+.rules-list li{display:flex;align-items:flex-start;gap:1rem;background:var(--dark3);border-left:4px solid var(--orange);padding:1rem 1.2rem;font-size:.83rem;line-height:1.8;color:rgba(255,248,238,.65);}
+.rnum{font-family:'Press Start 2P',monospace;font-size:.5rem;color:var(--orange);flex-shrink:0;margin-top:.2rem;}
 
-/* ─── CTA ─── */
-.cta{
-  background:linear-gradient(135deg,var(--dark3),var(--dark2));
-  text-align:center;
-  padding:6rem 2rem;
-  position:relative;overflow:hidden;
-}
-.cta::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at center, rgba(255,107,0,.12) 0%, transparent 70%);
-}
-.cta-title{
-  font-family:'Press Start 2P',monospace;
-  font-size:clamp(.9rem,2.5vw,1.4rem);
-  color:var(--orange2);
-  text-shadow:3px 3px 0 var(--dark);
-  margin-bottom:1rem;
-  position:relative;
-}
-.cta-sub{
-  font-size:.9rem;
-  color:rgba(255,248,238,.55);
-  margin-bottom:2rem;
-  position:relative;
-}
+/* CTA */
+.cta-bg{background:linear-gradient(135deg,var(--dark3),var(--dark2));text-align:center;padding:6rem 2rem;position:relative;overflow:hidden;}
+.cta-bg::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(255,107,0,.1) 0%,transparent 70%);}
+.cta-title{font-family:'Press Start 2P',monospace;font-size:clamp(.85rem,2.5vw,1.3rem);color:var(--orange2);text-shadow:3px 3px 0 var(--dark);margin-bottom:1rem;position:relative;}
+.cta-sub{font-size:.88rem;color:rgba(255,248,238,.5);margin-bottom:2rem;position:relative;line-height:2;}
 
-/* ─── FOOTER ─── */
-footer{
-  background:var(--dark);
-  border-top:4px solid var(--orange);
-  padding:2rem;
-  text-align:center;
-}
-.footer-logo{
-  font-family:'Press Start 2P',monospace;
-  font-size:.75rem;
-  color:var(--orange2);
-  margin-bottom:.8rem;
-}
-.footer-text{
-  font-size:.75rem;
-  color:rgba(255,248,238,.25);
-  line-height:2;
-}
-.footer-text a{color:var(--orange);text-decoration:none;}
+/* FOOTER */
+footer{background:var(--dark);border-top:4px solid var(--orange);padding:2rem;text-align:center;}
+.foot-logo{font-family:'Press Start 2P',monospace;font-size:.7rem;color:var(--orange2);margin-bottom:.8rem;}
+.foot-text{font-size:.72rem;color:rgba(255,248,238,.22);line-height:2.2;}
+.foot-text a{color:var(--orange);text-decoration:none;}
+.foot-text a:hover{text-decoration:underline;}
 
-/* ANIMATIONS */
-@keyframes fadeDown{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+/* TOAST */
+#toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:var(--orange);color:var(--dark);font-family:'Press Start 2P',monospace;font-size:.55rem;padding:.75rem 1.4rem;border:3px solid var(--orange2);box-shadow:4px 4px 0 var(--dark2);display:none;z-index:9999;white-space:nowrap;}
 
-/* SCROLL REVEAL */
-.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s,transform .6s;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .65s,transform .65s;}
 .reveal.visible{opacity:1;transform:none;}
-
-/* PIXEL TOAST */
-#toast{
-  position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);
-  background:var(--orange);color:var(--dark);
-  font-family:'Press Start 2P',monospace;font-size:.6rem;
-  padding:.8rem 1.5rem;
-  border:3px solid var(--orange2);
-  display:none;z-index:9999;
-  box-shadow:4px 4px 0 var(--dark2);
-}
 
 @media(max-width:700px){
   .nav-links{display:none;}
   .info-grid{grid-template-columns:1fr;}
   .hero-title{font-size:1rem;}
+  .feat-grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -440,7 +169,7 @@ footer{
 <!-- NAV -->
 <nav>
   <div class="nav-logo">
-    <span class="dot"></span>
+    <span class="nav-blink"></span>
     🍊 오렌지 타우니
   </div>
   <ul class="nav-links">
@@ -449,246 +178,237 @@ footer{
     <li><a href="#rules">규칙</a></li>
     <li><a href="#join">입장</a></li>
   </ul>
-  <div class="ip-badge" onclick="copyIP()">📋 IP 복사</div>
+  <div class="nav-ip" onclick="copyIP()">📋 IP 복사</div>
 </nav>
 
 <!-- HERO -->
 <section class="hero" id="home">
-  <!-- Pixel Sun -->
   <div class="sun"></div>
 
-  <!-- Clouds -->
-  <div class="cloud" style="top:18%;left:-100px;animation-duration:28s;animation-delay:0s;">
-    <span class="cloud-block" style="width:80px;height:24px;display:block;"></span>
-    <span class="cloud-block" style="width:120px;height:24px;display:block;margin-top:-4px;margin-left:-20px;"></span>
+  <div class="cloud" style="top:15%;left:-120px;animation-duration:30s;animation-delay:0s;">
+    <span class="cb" style="width:80px;height:22px;"></span>
+    <span class="cb" style="width:116px;height:22px;margin-top:-4px;margin-left:-18px;"></span>
   </div>
-  <div class="cloud" style="top:28%;left:-150px;animation-duration:36s;animation-delay:-14s;">
-    <span class="cloud-block" style="width:60px;height:20px;display:block;"></span>
-    <span class="cloud-block" style="width:96px;height:20px;display:block;margin-top:-4px;margin-left:-16px;"></span>
+  <div class="cloud" style="top:26%;left:-160px;animation-duration:42s;animation-delay:-18s;">
+    <span class="cb" style="width:56px;height:18px;"></span>
+    <span class="cb" style="width:90px;height:18px;margin-top:-4px;margin-left:-14px;"></span>
+  </div>
+  <div class="cloud" style="top:20%;left:-80px;animation-duration:55s;animation-delay:-30s;">
+    <span class="cb" style="width:64px;height:20px;"></span>
+    <span class="cb" style="width:100px;height:20px;margin-top:-4px;margin-left:-16px;"></span>
   </div>
 
   <div class="hero-content">
-    <div class="hero-badge">🍊 TOWNY SERVER · 1.21.8</div>
+    <div class="hero-badge">🍊 TOWNY SERVER · 1.21.8 · PAPER</div>
     <h1 class="hero-title">
       오렌지 타우니<br/><span>ORANGE TOWNY</span>
     </h1>
-    <p class="hero-sub">마을을 세우고, 동맹을 맺고, 세계를 정복하세요.<br/>친근하고 활기찬 타우니 커뮤니티가 기다립니다.</p>
-    <div class="hero-buttons">
-      <a href="#join" class="btn btn-primary">⚔️ 지금 참가하기</a>
-      <a href="#features" class="btn btn-secondary">📖 서버 소개</a>
+    <p class="hero-sub">
+      마을을 세우고, 동맹을 맺고, 세계를 정복하세요.<br/>
+      친근하고 활기찬 한국형 타우니 커뮤니티가 기다립니다.
+    </p>
+    <div class="hero-btns">
+      <a href="#join" class="btn btn-a">⚔️ 지금 참가하기</a>
+      <a href="https://discord.gg/aPB9tqtFaA" class="btn btn-b" target="_blank">💬 디스코드</a>
     </div>
-    <div class="online-bar" id="onlineBar">
-      <span class="online-dot" id="onlineDot"></span>
-      <span class="online-text" id="onlineText">서버 확인 중...</span>
+    <div class="status-bar">
+      <span class="s-dot" id="sDot"></span>
+      <span class="s-text" id="sText">서버 확인 중...</span>
     </div>
   </div>
 
-  <!-- Pixel Ground -->
   <div class="ground" id="ground"></div>
 </section>
 
-<div class="px-divider"></div>
+<div class="divider"></div>
 
 <!-- FEATURES -->
 <section class="features-bg" id="features">
-  <h2 class="section-title reveal">✨ 서버 특징</h2>
-  <div class="section-line reveal"></div>
-  <div class="features-grid">
+  <h2 class="sec-title reveal">✨ 서버 특징</h2>
+  <div class="sec-line reveal"></div>
+  <div class="feat-grid">
     <div class="feat-card reveal">
       <span class="feat-icon">🏘️</span>
       <div class="feat-title">TOWNY 시스템</div>
       <div class="feat-desc">마을을 세우고 시민을 모아 나라를 건국하세요. 영토를 확장하고 적으로부터 땅을 지키세요.</div>
     </div>
     <div class="feat-card reveal">
+      <span class="feat-icon">💰</span>
+      <div class="feat-title">xConomy 경제</div>
+      <div class="feat-desc">xConomy + Vault 기반의 경제 시스템. 돈을 벌고, 거래하고, 마을 세금을 운영하세요.</div>
+    </div>
+    <div class="feat-card reveal">
       <span class="feat-icon">⚔️</span>
-      <div class="feat-title">PvP & 전쟁</div>
-      <div class="feat-desc">국가 간 전쟁 시스템! 동맹과 적대 관계를 선언하고 영토 전쟁을 벌여 승리하세요.</div>
-    </div>
-    <div class="feat-card reveal">
-      <span class="feat-icon">🏪</span>
-      <div class="feat-title">경제 시스템</div>
-      <div class="feat-desc">플레이어 상점, 경매장, 화폐 시스템으로 서버 경제를 직접 움직이세요.</div>
-    </div>
-    <div class="feat-card reveal">
-      <span class="feat-icon">🌾</span>
-      <div class="feat-title">커스텀 컨텐츠</div>
-      <div class="feat-desc">커스텀 아이템, 직업 시스템, 퀘스트까지 바닐라 마크 그 이상의 경험을 제공합니다.</div>
+      <div class="feat-title">PvP & 영토전쟁</div>
+      <div class="feat-desc">국가 간 동맹과 적대 선언, 영토 전쟁으로 서버 최강의 나라를 세우세요.</div>
     </div>
     <div class="feat-card reveal">
       <span class="feat-icon">🛡️</span>
-      <div class="feat-title">안티그리프</div>
-      <div class="feat-desc">CoreProtect로 모든 블록 기록이 저장됩니다. 그리퍼는 즉시 처벌되고 원상복구됩니다.</div>
+      <div class="feat-title">타운 보호</div>
+      <div class="feat-desc">타운 내 영토는 완벽하게 보호됩니다. 허락 없이는 아무도 건드릴 수 없어요.</div>
+    </div>
+    <div class="feat-card reveal">
+      <span class="feat-icon">🌏</span>
+      <div class="feat-title">국가 시스템</div>
+      <div class="feat-desc">여러 마을이 모여 국가를 형성하고, 외교와 전쟁으로 대륙을 지배하세요.</div>
     </div>
     <div class="feat-card reveal">
       <span class="feat-icon">🎉</span>
       <div class="feat-title">활발한 커뮤니티</div>
-      <div class="feat-desc">정기 이벤트, 건축 대회, 시즌 리셋. 언제나 새로운 콘텐츠가 기다립니다.</div>
+      <div class="feat-desc">디스코드 기반 커뮤니티, 정기 이벤트와 공지로 언제나 함께합니다.</div>
     </div>
   </div>
 </section>
 
-<div class="px-divider"></div>
+<div class="divider"></div>
 
 <!-- SERVER INFO -->
-<section class="info-section" id="info">
-  <h2 class="section-title reveal">📡 서버 정보</h2>
-  <div class="section-line reveal"></div>
+<section class="info-bg" id="info">
+  <h2 class="sec-title reveal">📡 서버 정보</h2>
+  <div class="sec-line reveal"></div>
   <div class="info-grid">
     <div>
-      <div class="info-box reveal">
-        <div class="info-box-title">⚙️ 서버 스펙</div>
-        <div class="info-row"><span class="info-label">버전</span><span class="info-val orange" id="serverVersion">1.21.8</span></div>
-        <div class="info-row"><span class="info-label">서버 종류</span><span class="info-val">Paper</span></div>
-        <div class="info-row"><span class="info-label">상태</span><span class="info-val" id="serverStatus">🔄 확인 중</span></div>
-        <div class="info-row"><span class="info-label">위치</span><span class="info-val">🇰🇷 한국 서울</span></div>
+      <div class="ibox reveal">
+        <div class="ibox-title">⚙️ 서버 스펙</div>
+        <div class="irow"><span class="ilabel">버전</span><span class="ival o">1.21.8</span></div>
+        <div class="irow"><span class="ilabel">서버 종류</span><span class="ival">Paper</span></div>
+        <div class="irow"><span class="ilabel">상태</span><span class="ival" id="statusBox">🔄 확인 중</span></div>
+        <div class="irow"><span class="ilabel">위치</span><span class="ival">🇰🇷 한국</span></div>
+        <div class="irow"><span class="ilabel">주소</span><span class="ival o">krsmp.mcv.kr</span></div>
       </div>
-      <div class="info-box reveal" style="margin-top:1.5rem;">
-        <div class="info-box-title">🧩 주요 플러그인</div>
-        <div class="info-row"><span class="info-label">도시 관리</span><span class="info-val">Towny</span></div>
-        <div class="info-row"><span class="info-label">경제</span><span class="info-val">xConomy</span></div>
-        <div class="info-row"><span class="info-label">경제 API</span><span class="info-val">Vault</span></div>
+      <div class="ibox reveal" style="margin-top:1.4rem;">
+        <div class="ibox-title">🧩 플러그인</div>
+        <div class="irow"><span class="ilabel">도시 관리</span><span class="ival">Towny</span></div>
+        <div class="irow"><span class="ilabel">경제</span><span class="ival">xConomy</span></div>
+        <div class="irow"><span class="ilabel">경제 API</span><span class="ival">Vault</span></div>
       </div>
     </div>
     <div>
-      <div class="copy-box reveal">
-        <div class="info-box-title" style="text-align:center;">🍊 서버 주소</div>
-        <code class="copy-ip" onclick="copyIP()" id="ipText">krsmp.mcv.kr</code>
-        <p class="copy-hint">클릭하면 복사됩니다</p>
+      <div class="ip-box reveal">
+        <div class="ibox-title" style="text-align:center;">🍊 서버 주소</div>
+        <code class="ip-code" onclick="copyIP()">krsmp.mcv.kr</code>
+        <p class="ip-hint">클릭하면 클립보드에 복사됩니다</p>
       </div>
-      <div class="info-box reveal" style="margin-top:1.5rem;">
-        <div class="info-box-title">📅 서버 일정</div>
-        <div class="info-row"><span class="info-label">점검 시간</span><span class="info-val">매주 월 02:00</span></div>
-        <div class="info-row"><span class="info-label">이벤트</span><span class="info-val orange">매주 토 20:00</span></div>
-        <div class="info-row"><span class="info-label">다음 시즌</span><span class="info-val">미정</span></div>
-        <div class="info-row"><span class="info-label">디스코드</span><span class="info-val green">discord.gg/orange</span></div>
+      <div class="ibox reveal" style="margin-top:1.4rem;">
+        <div class="ibox-title">🔗 링크</div>
+        <div class="irow">
+          <span class="ilabel">디스코드</span>
+          <a href="https://discord.gg/aPB9tqtFaA" target="_blank" style="font-family:'Press Start 2P',monospace;font-size:.48rem;color:var(--green);text-decoration:none;">참가하기 →</a>
+        </div>
+        <div class="irow"><span class="ilabel">문의</span><span class="ival">디스코드 채널</span></div>
       </div>
     </div>
   </div>
 </section>
 
-<div class="px-divider"></div>
+<div class="divider"></div>
 
 <!-- RULES -->
 <section class="rules-bg" id="rules">
-  <h2 class="section-title reveal">📜 서버 규칙</h2>
-  <div class="section-line reveal"></div>
+  <h2 class="sec-title reveal">📜 서버 규칙</h2>
+  <div class="sec-line reveal"></div>
   <ul class="rules-list">
-    <li class="reveal"><span class="rnum">01</span> 다른 플레이어를 존중하세요. 욕설, 혐오 발언, 괴롭힘은 즉시 영구 정지됩니다.</li>
-    <li class="reveal"><span class="rnum">02</span> 핵 클라이언트, 치트 프로그램, 매크로 사용을 금지합니다.</li>
-    <li class="reveal"><span class="rnum">03</span> 타운 영토 밖 그리핑은 허용되나, 타운 내 그리핑·도둑질은 금지입니다.</li>
-    <li class="reveal"><span class="rnum">04</span> 중복 계정, 계정 공유를 금지합니다. 1인 1계정 원칙을 준수하세요.</li>
-    <li class="reveal"><span class="rnum">05</span> 채팅에서 개인정보(전화번호, 주소 등) 공유를 삼가세요.</li>
-    <li class="reveal"><span class="rnum">06</span> 관리자의 결정에 따르세요. 불만 사항은 디스코드 문의 채널을 이용해 주세요.</li>
-    <li class="reveal"><span class="rnum">07</span> 과도한 렉 유발 장치(무한 레드스톤 등) 설치를 금지합니다.</li>
+    <li class="reveal"><span class="rnum">01</span>다른 플레이어를 존중하세요. 욕설·혐오 발언·괴롭힘은 즉시 영구 정지됩니다.</li>
+    <li class="reveal"><span class="rnum">02</span>핵 클라이언트, 치트 프로그램, 매크로 사용을 금지합니다.</li>
+    <li class="reveal"><span class="rnum">03</span>타운 영토 밖 그리핑은 허용되나, 타운 내 그리핑·도둑질은 금지입니다.</li>
+    <li class="reveal"><span class="rnum">04</span>중복 계정·계정 공유를 금지합니다. 1인 1계정 원칙을 준수하세요.</li>
+    <li class="reveal"><span class="rnum">05</span>채팅에서 개인정보(전화번호, 주소 등) 공유를 삼가세요.</li>
+    <li class="reveal"><span class="rnum">06</span>관리자의 결정에 따르세요. 불만은 디스코드 문의 채널을 이용해 주세요.</li>
+    <li class="reveal"><span class="rnum">07</span>과도한 렉 유발 장치(무한 레드스톤 등) 설치를 금지합니다.</li>
   </ul>
 </section>
 
-<div class="px-divider"></div>
+<div class="divider"></div>
 
 <!-- CTA -->
-<section class="cta" id="join">
-  <h2 class="cta-title reveal">지금 바로 시작하세요!</h2>
-  <p class="cta-sub reveal">오렌지 타우니에서 당신만의 마을을 세우고<br/>최고의 영주가 되어보세요. 🍊</p>
+<section class="cta-bg" id="join">
+  <h2 class="cta-title reveal">지금 바로 시작하세요! 🍊</h2>
+  <p class="cta-sub reveal">
+    오렌지 타우니에서 당신만의 마을을 세우고<br/>최고의 영주가 되어보세요.
+  </p>
   <div class="reveal" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
-    <a href="https://discord.gg/orange" class="btn btn-primary" target="_blank">💬 디스코드 참가</a>
-    <a href="#" class="btn btn-secondary" onclick="copyIP();return false;">📋 IP 복사하기</a>
+    <a href="https://discord.gg/aPB9tqtFaA" class="btn btn-a" target="_blank">💬 디스코드 참가</a>
+    <a href="#" class="btn btn-b" onclick="copyIP();return false;">📋 IP 복사하기</a>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">🍊 오렌지 타우니</div>
-  <p class="footer-text">
-    Minecraft Server · krsmp.mcv.kr<br/>
-    © 2026 오렌지 타우니 — 이 서버는 Mojang과 무관합니다.
-    서버장 닉네임: like_beef_orange<br/>
-    <a href="#">디스코드</a> · <a href="#">공지사항</a> · <a href="#">후원</a>
+  <div class="foot-logo">🍊 오렌지 타우니</div>
+  <p class="foot-text">
+    Minecraft Towny Server · krsmp.mcv.kr · 1.21.8 Paper<br/>
+    © 2026 오렌지 타우니 — 이 서버는 Mojang Studios와 무관합니다.<br/>
+    <a href="https://discord.gg/aPB9tqtFaA" target="_blank">디스코드</a>
   </p>
 </footer>
 
 <script>
-// ─── STARS ───
+// STARS
 const starsEl = document.getElementById('stars');
-for(let i=0;i<80;i++){
-  const s = document.createElement('div');
-  s.classList.add('star');
-  const size = Math.random()<.7?2:4;
-  s.style.cssText=`
-    width:${size}px;height:${size}px;
-    top:${Math.random()*100}%;
-    left:${Math.random()*100}%;
-    --d:${1.5+Math.random()*3}s;
-    animation-delay:${Math.random()*3}s;
-  `;
+for(let i=0;i<90;i++){
+  const s=document.createElement('div');
+  s.className='star';
+  const sz=Math.random()<.65?2:4;
+  s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${1.5+Math.random()*3.5}s;animation-delay:${Math.random()*4}s;`;
   starsEl.appendChild(s);
 }
 
-// ─── PIXEL GROUND ───
-const ground = document.getElementById('ground');
-const cols = Math.ceil(window.innerWidth/32)+2;
-const rows = ['grass','dirt','stone'];
-rows.forEach((type,ri)=>{
-  const row = document.createElement('div');
-  row.classList.add('ground-layer');
+// PIXEL GROUND
+const ground=document.getElementById('ground');
+const cols=Math.ceil(window.innerWidth/28)+2;
+['bg','bd','bs'].forEach(cls=>{
+  const row=document.createElement('div');
+  row.className='ground-row';
   for(let c=0;c<cols;c++){
-    const b = document.createElement('div');
-    b.classList.add('block',`b-${type}`);
+    const b=document.createElement('div');
+    b.className=`bl ${cls}`;
     row.appendChild(b);
   }
   ground.appendChild(row);
 });
 
-// ─── SERVER STATUS (온라인/오프라인만) ───
-const SERVER_IP = 'krsmp.mcv.kr';
-const IP = SERVER_IP;
-const toast = document.getElementById('toast');
+// SERVER STATUS — 온라인/오프라인만, 버전·접속자 수는 API 안 씀
+const SERVER='krsmp.mcv.kr';
+const IP=SERVER;
+const toast=document.getElementById('toast');
 
-async function fetchServerStatus() {
-  const dot = document.getElementById('onlineDot');
-  const text = document.getElementById('onlineText');
-  const statusEl = document.getElementById('serverStatus');
-
-  try {
-    const res = await fetch(`https://api.mcsrvstat.us/3/${SERVER_IP}`);
-    const data = await res.json();
-
-    if (data.online) {
-      dot.style.background = 'var(--green)';
-      dot.style.boxShadow = '0 0 8px var(--green)';
-      dot.style.animation = '';
-      text.innerHTML = '<span style="color:var(--green);">🟢 서버 온라인</span>';
-      statusEl.textContent = '🟢 온라인';
-      statusEl.style.color = 'var(--green)';
+async function checkStatus(){
+  const dot=document.getElementById('sDot');
+  const text=document.getElementById('sText');
+  const box=document.getElementById('statusBox');
+  try{
+    const res=await fetch(`https://api.mcsrvstat.us/3/${SERVER}`);
+    const data=await res.json();
+    if(data.online){
+      dot.style.cssText='width:10px;height:10px;background:var(--green);box-shadow:0 0 8px var(--green);animation:blink .9s step-start infinite;';
+      text.innerHTML='<span style="color:var(--green);">🟢 서버 온라인</span>';
+      box.textContent='🟢 온라인';
+      box.style.color='var(--green)';
     } else {
-      dot.style.background = '#e03030';
-      dot.style.boxShadow = '0 0 8px #e03030';
-      dot.style.animation = 'none';
-      text.innerHTML = '<span style="color:#e03030;">🔴 서버 오프라인</span>';
-      statusEl.textContent = '🔴 오프라인';
-      statusEl.style.color = '#e03030';
+      dot.style.cssText='width:10px;height:10px;background:#e03030;box-shadow:0 0 8px #e03030;animation:none;';
+      text.innerHTML='<span style="color:#e03030;">🔴 서버 오프라인</span>';
+      box.textContent='🔴 오프라인';
+      box.style.color='#e03030';
     }
-  } catch(e) {
-    text.textContent = '상태 확인 실패';
+  } catch {
+    text.textContent='상태 불명';
   }
 }
+checkStatus();
+setInterval(checkStatus,60000);
 
-fetchServerStatus();
-setInterval(fetchServerStatus, 60000); // 1분마다 갱신
-
-// ─── COPY IP ───
+// COPY IP
 function copyIP(){
   navigator.clipboard.writeText(IP).catch(()=>{});
   toast.style.display='block';
   setTimeout(()=>toast.style.display='none',2000);
 }
 
-// ─── SCROLL REVEAL ───
-const observer = new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting) e.target.classList.add('visible');
-  });
+// SCROLL REVEAL
+const ro=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
 },{threshold:.12});
-document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
 </script>
 </body>
 </html>
