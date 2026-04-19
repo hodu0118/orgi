@@ -1,1 +1,675 @@
-<p>yn<p>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>🍊 오렌지 타우니 | Minecraft Server</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+
+:root{
+  --orange:#ff6b00;
+  --orange2:#ff9a3c;
+  --orange3:#ffcc80;
+  --dark:#1a0e00;
+  --dark2:#2d1a00;
+  --dark3:#3d2800;
+  --cream:#fff8ee;
+  --green:#5db85d;
+  --green2:#3a8f3a;
+  --sky:#5ba3d9;
+  --dirt:#8b6340;
+  --stone:#888;
+}
+
+html{scroll-behavior:smooth;}
+body{
+  background:var(--dark);
+  color:var(--cream);
+  font-family:'Noto Sans KR',sans-serif;
+  overflow-x:hidden;
+  image-rendering:pixelated;
+}
+
+/* PIXEL CURSOR */
+body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect x='0' y='0' width='4' height='4' fill='%23ff6b00'/%3E%3Crect x='4' y='4' width='4' height='4' fill='%23ff6b00'/%3E%3Crect x='8' y='8' width='4' height='4' fill='%23ff6b00'/%3E%3C/svg%3E") 0 0, crosshair;}
+
+/* ─── PIXEL FONT HELPER ─── */
+.pixel{font-family:'Press Start 2P',monospace;}
+
+/* ─── STARS BG ─── */
+.stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.star{position:absolute;background:rgba(255,200,100,.6);animation:twinkle var(--d,2s) infinite;}
+@keyframes twinkle{0%,100%{opacity:.2;}50%{opacity:1;}}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.8rem 2rem;
+  background:rgba(26,14,0,.85);
+  border-bottom:3px solid var(--orange);
+  backdrop-filter:blur(8px);
+  image-rendering:pixelated;
+}
+.nav-logo{
+  font-family:'Press Start 2P',monospace;
+  font-size:.75rem;
+  color:var(--orange2);
+  text-shadow:2px 2px var(--dark);
+  display:flex;align-items:center;gap:.7rem;
+}
+.nav-logo .dot{
+  width:16px;height:16px;
+  background:var(--orange);
+  border:2px solid var(--orange2);
+  display:inline-block;
+  animation:blink .9s step-start infinite;
+}
+@keyframes blink{50%{opacity:0;}}
+.nav-links{display:flex;gap:1.5rem;list-style:none;}
+.nav-links a{
+  font-family:'Press Start 2P',monospace;
+  font-size:.5rem;
+  color:var(--orange3);
+  text-decoration:none;
+  padding:.4rem .6rem;
+  border:1px solid transparent;
+  transition:all .15s steps(1);
+}
+.nav-links a:hover{
+  background:var(--orange);
+  color:var(--dark);
+  border-color:var(--orange2);
+}
+.ip-badge{
+  font-family:'Press Start 2P',monospace;
+  font-size:.5rem;
+  background:var(--orange);
+  color:var(--dark);
+  padding:.4rem .8rem;
+  border:2px solid var(--orange2);
+  cursor:pointer;
+  transition:transform .1s steps(1);
+  position:relative;
+}
+.ip-badge:hover{transform:translate(-2px,-2px);}
+.ip-badge:hover::after{
+  content:'복사됨!';
+  position:absolute;top:-2rem;left:50%;transform:translateX(-50%);
+  background:var(--green);color:#fff;
+  font-size:.45rem;padding:.3rem .5rem;white-space:nowrap;
+}
+
+/* ─── HERO ─── */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  justify-content:center;align-items:center;
+  text-align:center;
+  padding:6rem 2rem 2rem;
+  position:relative;
+  overflow:hidden;
+}
+
+/* pixel sky gradient */
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,
+    #1a3a5c 0%,
+    #1a2a4a 30%,
+    #1a1a30 55%,
+    #1a0e00 100%);
+  z-index:0;
+}
+
+/* PIXEL GROUND */
+.ground{
+  position:absolute;bottom:0;left:0;right:0;
+  z-index:2;
+}
+.ground-layer{width:100%;height:32px;display:flex;}
+.block{flex:1;min-width:32px;max-width:32px;height:32px;border:1px solid rgba(0,0,0,.3);}
+.b-grass{background:var(--green2);border-top:8px solid var(--green);}
+.b-dirt{background:var(--dirt);}
+.b-stone{background:var(--stone);}
+
+/* SUN */
+.sun{
+  position:absolute;top:10%;right:12%;
+  width:80px;height:80px;
+  background:var(--orange2);
+  border:4px solid var(--orange3);
+  box-shadow:0 0 0 4px var(--orange),0 0 40px var(--orange2);
+  z-index:1;
+  animation:sunFloat 4s ease-in-out infinite;
+}
+@keyframes sunFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+
+/* CLOUDS */
+.cloud{position:absolute;z-index:1;animation:cloudDrift linear infinite;}
+.cloud-block{
+  display:inline-block;
+  background:rgba(255,255,255,.18);
+  border:2px solid rgba(255,255,255,.1);
+}
+@keyframes cloudDrift{from{transform:translateX(-200px);}to{transform:translateX(110vw);}}
+
+/* HERO TEXT */
+.hero-content{position:relative;z-index:3;}
+.hero-badge{
+  font-family:'Press Start 2P',monospace;
+  font-size:.55rem;
+  background:var(--orange);
+  color:var(--dark);
+  padding:.4rem 1rem;
+  display:inline-block;
+  margin-bottom:1.5rem;
+  animation:fadeDown .6s ease both;
+}
+.hero-title{
+  font-family:'Press Start 2P',monospace;
+  font-size:clamp(1.2rem,4vw,2.5rem);
+  line-height:1.6;
+  color:var(--orange2);
+  text-shadow:4px 4px 0 var(--dark),6px 6px 0 rgba(255,107,0,.3);
+  margin-bottom:.5rem;
+  animation:fadeDown .6s .1s ease both;
+}
+.hero-title span{color:var(--orange3);}
+.hero-sub{
+  font-size:.9rem;
+  color:rgba(255,248,238,.65);
+  margin-bottom:2.5rem;
+  line-height:1.8;
+  animation:fadeDown .6s .2s ease both;
+}
+.hero-buttons{
+  display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;
+  animation:fadeDown .6s .3s ease both;
+}
+.btn{
+  font-family:'Press Start 2P',monospace;
+  font-size:.6rem;
+  padding:.9rem 1.8rem;
+  text-decoration:none;
+  display:inline-block;
+  transition:transform .1s steps(1),box-shadow .1s steps(1);
+}
+.btn-primary{
+  background:var(--orange);
+  color:var(--dark);
+  border:3px solid var(--orange2);
+  box-shadow:4px 4px 0 var(--dark2);
+}
+.btn-primary:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--dark2);}
+.btn-secondary{
+  background:transparent;
+  color:var(--orange2);
+  border:3px solid var(--orange);
+  box-shadow:4px 4px 0 var(--dark2);
+}
+.btn-secondary:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--dark2);}
+
+/* ONLINE COUNTER */
+.online-bar{
+  display:inline-flex;align-items:center;gap:.8rem;
+  margin-top:2rem;
+  background:rgba(255,107,0,.1);
+  border:2px solid var(--orange);
+  padding:.6rem 1.2rem;
+  animation:fadeDown .6s .4s ease both;
+}
+.online-dot{width:10px;height:10px;background:var(--green);box-shadow:0 0 8px var(--green);animation:blink .8s step-start infinite;}
+.online-text{font-family:'Press Start 2P',monospace;font-size:.5rem;color:var(--orange3);}
+.online-count{color:var(--green);}
+
+/* PIXEL DIVIDER */
+.px-divider{
+  width:100%;height:8px;
+  background:repeating-linear-gradient(90deg,var(--orange) 0,var(--orange) 8px,var(--orange2) 8px,var(--orange2) 16px);
+}
+
+/* ─── SECTIONS COMMON ─── */
+section{position:relative;z-index:5;padding:5rem 2rem;}
+.section-title{
+  font-family:'Press Start 2P',monospace;
+  font-size:clamp(.8rem,2vw,1.1rem);
+  color:var(--orange2);
+  text-align:center;
+  margin-bottom:.5rem;
+  text-shadow:3px 3px 0 var(--dark2);
+}
+.section-line{
+  width:60px;height:4px;
+  background:var(--orange);
+  margin:.7rem auto 3rem;
+}
+
+/* ─── FEATURES ─── */
+.features-bg{background:var(--dark2);}
+.features-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:1.5rem;
+  max-width:1100px;margin:0 auto;
+}
+.feat-card{
+  background:var(--dark3);
+  border:3px solid var(--orange);
+  padding:2rem 1.5rem;
+  position:relative;
+  transition:transform .15s steps(2),box-shadow .15s steps(2);
+}
+.feat-card::after{
+  content:'';
+  position:absolute;bottom:-6px;right:-6px;
+  width:100%;height:100%;
+  background:var(--orange);
+  z-index:-1;
+}
+.feat-card:hover{transform:translate(-3px,-3px);}
+.feat-icon{
+  font-size:2.5rem;
+  display:block;
+  margin-bottom:1rem;
+  image-rendering:auto;
+}
+.feat-title{
+  font-family:'Press Start 2P',monospace;
+  font-size:.65rem;
+  color:var(--orange2);
+  margin-bottom:.8rem;
+  line-height:1.6;
+}
+.feat-desc{font-size:.82rem;color:rgba(255,248,238,.6);line-height:1.8;}
+
+/* ─── SERVER INFO ─── */
+.info-section{background:var(--dark);}
+.info-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:3rem;max-width:900px;margin:0 auto;align-items:start;
+}
+.info-box{
+  background:var(--dark2);
+  border:3px solid var(--orange);
+  padding:2rem;
+}
+.info-box-title{
+  font-family:'Press Start 2P',monospace;
+  font-size:.65rem;
+  color:var(--orange3);
+  margin-bottom:1.5rem;
+  padding-bottom:.7rem;
+  border-bottom:2px solid var(--dark3);
+}
+.info-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.6rem 0;
+  border-bottom:1px solid rgba(255,107,0,.1);
+  font-size:.8rem;
+}
+.info-row:last-child{border-bottom:none;}
+.info-label{color:rgba(255,248,238,.4);font-size:.75rem;}
+.info-val{color:var(--orange2);font-family:'Press Start 2P',monospace;font-size:.55rem;}
+.info-val.green{color:var(--green);}
+.info-val.orange{color:var(--orange);}
+
+/* COPY IP BOX */
+.copy-box{
+  background:var(--dark2);border:3px solid var(--orange);
+  padding:2rem;text-align:center;margin-top:1.5rem;
+}
+.copy-ip{
+  font-family:'Press Start 2P',monospace;
+  font-size:clamp(.7rem,2vw,1rem);
+  color:var(--orange3);
+  background:var(--dark3);
+  border:2px solid var(--orange);
+  padding:1rem 1.5rem;
+  display:block;
+  margin:1rem auto;
+  cursor:pointer;
+  transition:all .1s steps(1);
+  letter-spacing:.05em;
+}
+.copy-ip:hover{background:var(--orange);color:var(--dark);}
+.copy-hint{font-size:.7rem;color:rgba(255,248,238,.35);font-family:'Press Start 2P',monospace;font-size:.45rem;}
+
+/* ─── RULES ─── */
+.rules-bg{background:var(--dark2);}
+.rules-list{
+  max-width:700px;margin:0 auto;
+  list-style:none;
+  display:flex;flex-direction:column;gap:1rem;
+}
+.rules-list li{
+  display:flex;align-items:flex-start;gap:1rem;
+  background:var(--dark3);
+  border-left:4px solid var(--orange);
+  padding:1rem 1.2rem;
+  font-size:.85rem;
+  line-height:1.7;
+  color:rgba(255,248,238,.7);
+}
+.rules-list li .rnum{
+  font-family:'Press Start 2P',monospace;
+  font-size:.55rem;
+  color:var(--orange);
+  flex-shrink:0;
+  margin-top:.15rem;
+}
+
+/* ─── CTA ─── */
+.cta{
+  background:linear-gradient(135deg,var(--dark3),var(--dark2));
+  text-align:center;
+  padding:6rem 2rem;
+  position:relative;overflow:hidden;
+}
+.cta::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at center, rgba(255,107,0,.12) 0%, transparent 70%);
+}
+.cta-title{
+  font-family:'Press Start 2P',monospace;
+  font-size:clamp(.9rem,2.5vw,1.4rem);
+  color:var(--orange2);
+  text-shadow:3px 3px 0 var(--dark);
+  margin-bottom:1rem;
+  position:relative;
+}
+.cta-sub{
+  font-size:.9rem;
+  color:rgba(255,248,238,.55);
+  margin-bottom:2rem;
+  position:relative;
+}
+
+/* ─── FOOTER ─── */
+footer{
+  background:var(--dark);
+  border-top:4px solid var(--orange);
+  padding:2rem;
+  text-align:center;
+}
+.footer-logo{
+  font-family:'Press Start 2P',monospace;
+  font-size:.75rem;
+  color:var(--orange2);
+  margin-bottom:.8rem;
+}
+.footer-text{
+  font-size:.75rem;
+  color:rgba(255,248,238,.25);
+  line-height:2;
+}
+.footer-text a{color:var(--orange);text-decoration:none;}
+
+/* ANIMATIONS */
+@keyframes fadeDown{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s,transform .6s;}
+.reveal.visible{opacity:1;transform:none;}
+
+/* PIXEL TOAST */
+#toast{
+  position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);
+  background:var(--orange);color:var(--dark);
+  font-family:'Press Start 2P',monospace;font-size:.6rem;
+  padding:.8rem 1.5rem;
+  border:3px solid var(--orange2);
+  display:none;z-index:9999;
+  box-shadow:4px 4px 0 var(--dark2);
+}
+
+@media(max-width:700px){
+  .nav-links{display:none;}
+  .info-grid{grid-template-columns:1fr;}
+  .hero-title{font-size:1rem;}
+}
+</style>
+</head>
+<body>
+
+<div id="toast">✅ IP 복사됨!</div>
+<div class="stars" id="stars"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <span class="dot"></span>
+    🍊 오렌지 타우니
+  </div>
+  <ul class="nav-links">
+    <li><a href="#features">특징</a></li>
+    <li><a href="#info">서버정보</a></li>
+    <li><a href="#rules">규칙</a></li>
+    <li><a href="#join">입장</a></li>
+  </ul>
+  <div class="ip-badge" onclick="copyIP()">📋 IP 복사</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <!-- Pixel Sun -->
+  <div class="sun"></div>
+
+  <!-- Clouds -->
+  <div class="cloud" style="top:18%;left:-100px;animation-duration:28s;animation-delay:0s;">
+    <span class="cloud-block" style="width:80px;height:24px;display:block;"></span>
+    <span class="cloud-block" style="width:120px;height:24px;display:block;margin-top:-4px;margin-left:-20px;"></span>
+  </div>
+  <div class="cloud" style="top:28%;left:-150px;animation-duration:36s;animation-delay:-14s;">
+    <span class="cloud-block" style="width:60px;height:20px;display:block;"></span>
+    <span class="cloud-block" style="width:96px;height:20px;display:block;margin-top:-4px;margin-left:-16px;"></span>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-badge">🍊 TOWNY SERVER · 1.20.x</div>
+    <h1 class="hero-title">
+      오렌지 타우니<br/><span>ORANGE TOWNY</span>
+    </h1>
+    <p class="hero-sub">마을을 세우고, 동맹을 맺고, 세계를 정복하세요.<br/>친근하고 활기찬 타우니 커뮤니티가 기다립니다.</p>
+    <div class="hero-buttons">
+      <a href="#join" class="btn btn-primary">⚔️ 지금 참가하기</a>
+      <a href="#features" class="btn btn-secondary">📖 서버 소개</a>
+    </div>
+    <div class="online-bar">
+      <span class="online-dot"></span>
+      <span class="online-text">현재 접속 중: <span class="online-count" id="onlineCount">--</span> / 100</span>
+    </div>
+  </div>
+
+  <!-- Pixel Ground -->
+  <div class="ground" id="ground"></div>
+</section>
+
+<div class="px-divider"></div>
+
+<!-- FEATURES -->
+<section class="features-bg" id="features">
+  <h2 class="section-title reveal">✨ 서버 특징</h2>
+  <div class="section-line reveal"></div>
+  <div class="features-grid">
+    <div class="feat-card reveal">
+      <span class="feat-icon">🏘️</span>
+      <div class="feat-title">TOWNY 시스템</div>
+      <div class="feat-desc">마을을 세우고 시민을 모아 나라를 건국하세요. 영토를 확장하고 적으로부터 땅을 지키세요.</div>
+    </div>
+    <div class="feat-card reveal">
+      <span class="feat-icon">⚔️</span>
+      <div class="feat-title">PvP & 전쟁</div>
+      <div class="feat-desc">국가 간 전쟁 시스템! 동맹과 적대 관계를 선언하고 영토 전쟁을 벌여 승리하세요.</div>
+    </div>
+    <div class="feat-card reveal">
+      <span class="feat-icon">🏪</span>
+      <div class="feat-title">경제 시스템</div>
+      <div class="feat-desc">플레이어 상점, 경매장, 화폐 시스템으로 서버 경제를 직접 움직이세요.</div>
+    </div>
+    <div class="feat-card reveal">
+      <span class="feat-icon">🌾</span>
+      <div class="feat-title">커스텀 컨텐츠</div>
+      <div class="feat-desc">커스텀 아이템, 직업 시스템, 퀘스트까지 바닐라 마크 그 이상의 경험을 제공합니다.</div>
+    </div>
+    <div class="feat-card reveal">
+      <span class="feat-icon">🛡️</span>
+      <div class="feat-title">안티그리프</div>
+      <div class="feat-desc">CoreProtect로 모든 블록 기록이 저장됩니다. 그리퍼는 즉시 처벌되고 원상복구됩니다.</div>
+    </div>
+    <div class="feat-card reveal">
+      <span class="feat-icon">🎉</span>
+      <div class="feat-title">활발한 커뮤니티</div>
+      <div class="feat-desc">정기 이벤트, 건축 대회, 시즌 리셋. 언제나 새로운 콘텐츠가 기다립니다.</div>
+    </div>
+  </div>
+</section>
+
+<div class="px-divider"></div>
+
+<!-- SERVER INFO -->
+<section class="info-section" id="info">
+  <h2 class="section-title reveal">📡 서버 정보</h2>
+  <div class="section-line reveal"></div>
+  <div class="info-grid">
+    <div>
+      <div class="info-box reveal">
+        <div class="info-box-title">⚙️ 서버 스펙</div>
+        <div class="info-row"><span class="info-label">버전</span><span class="info-val orange">1.20.4</span></div>
+        <div class="info-row"><span class="info-label">서버 종류</span><span class="info-val">Paper Spigot</span></div>
+        <div class="info-row"><span class="info-label">최대 인원</span><span class="info-val">100명</span></div>
+        <div class="info-row"><span class="info-label">상태</span><span class="info-val green">🟢 온라인</span></div>
+        <div class="info-row"><span class="info-label">위치</span><span class="info-val">🇰🇷 한국 서울</span></div>
+        <div class="info-row"><span class="info-label">TPS</span><span class="info-val green">20.0</span></div>
+      </div>
+      <div class="info-box reveal" style="margin-top:1.5rem;">
+        <div class="info-box-title">🧩 주요 플러그인</div>
+        <div class="info-row"><span class="info-label">도시 관리</span><span class="info-val">Towny Advanced</span></div>
+        <div class="info-row"><span class="info-label">경제</span><span class="info-val">Vault + EssentialsX</span></div>
+        <div class="info-row"><span class="info-label">상점</span><span class="info-val">ChestShop</span></div>
+        <div class="info-row"><span class="info-label">보호</span><span class="info-val">CoreProtect</span></div>
+        <div class="info-row"><span class="info-label">직업</span><span class="info-val">Jobs Reborn</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="copy-box reveal">
+        <div class="info-box-title" style="text-align:center;">🍊 서버 주소</div>
+        <code class="copy-ip" onclick="copyIP()" id="ipText">play.orangetowny.kr</code>
+        <p class="copy-hint">클릭하면 복사됩니다</p>
+      </div>
+      <div class="info-box reveal" style="margin-top:1.5rem;">
+        <div class="info-box-title">📅 서버 일정</div>
+        <div class="info-row"><span class="info-label">점검 시간</span><span class="info-val">매주 월 02:00</span></div>
+        <div class="info-row"><span class="info-label">이벤트</span><span class="info-val orange">매주 토 20:00</span></div>
+        <div class="info-row"><span class="info-label">다음 시즌</span><span class="info-val">미정</span></div>
+        <div class="info-row"><span class="info-label">디스코드</span><span class="info-val green">discord.gg/orange</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="px-divider"></div>
+
+<!-- RULES -->
+<section class="rules-bg" id="rules">
+  <h2 class="section-title reveal">📜 서버 규칙</h2>
+  <div class="section-line reveal"></div>
+  <ul class="rules-list">
+    <li class="reveal"><span class="rnum">01</span> 다른 플레이어를 존중하세요. 욕설, 혐오 발언, 괴롭힘은 즉시 영구 정지됩니다.</li>
+    <li class="reveal"><span class="rnum">02</span> 핵 클라이언트, 치트 프로그램, 매크로 사용을 금지합니다.</li>
+    <li class="reveal"><span class="rnum">03</span> 타운 영토 밖 그리핑은 허용되나, 타운 내 그리핑·도둑질은 금지입니다.</li>
+    <li class="reveal"><span class="rnum">04</span> 중복 계정, 계정 공유를 금지합니다. 1인 1계정 원칙을 준수하세요.</li>
+    <li class="reveal"><span class="rnum">05</span> 채팅에서 개인정보(전화번호, 주소 등) 공유를 삼가세요.</li>
+    <li class="reveal"><span class="rnum">06</span> 관리자의 결정에 따르세요. 불만 사항은 디스코드 문의 채널을 이용해 주세요.</li>
+    <li class="reveal"><span class="rnum">07</span> 과도한 렉 유발 장치(무한 레드스톤 등) 설치를 금지합니다.</li>
+  </ul>
+</section>
+
+<div class="px-divider"></div>
+
+<!-- CTA -->
+<section class="cta" id="join">
+  <h2 class="cta-title reveal">지금 바로 시작하세요!</h2>
+  <p class="cta-sub reveal">오렌지 타우니에서 당신만의 마을을 세우고<br/>최고의 영주가 되어보세요. 🍊</p>
+  <div class="reveal" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+    <a href="https://discord.gg/orange" class="btn btn-primary" target="_blank">💬 디스코드 참가</a>
+    <a href="#" class="btn btn-secondary" onclick="copyIP();return false;">📋 IP 복사하기</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">🍊 오렌지 타우니</div>
+  <p class="footer-text">
+    Minecraft Server · play.orangetowny.kr<br/>
+    © 2026 오렌지 타우니 — 이 서버는 Mojang과 무관합니다.<br/>
+    <a href="#">디스코드</a> · <a href="#">공지사항</a> · <a href="#">후원</a>
+  </p>
+</footer>
+
+<script>
+// ─── STARS ───
+const starsEl = document.getElementById('stars');
+for(let i=0;i<80;i++){
+  const s = document.createElement('div');
+  s.classList.add('star');
+  const size = Math.random()<.7?2:4;
+  s.style.cssText=`
+    width:${size}px;height:${size}px;
+    top:${Math.random()*100}%;
+    left:${Math.random()*100}%;
+    --d:${1.5+Math.random()*3}s;
+    animation-delay:${Math.random()*3}s;
+  `;
+  starsEl.appendChild(s);
+}
+
+// ─── PIXEL GROUND ───
+const ground = document.getElementById('ground');
+const cols = Math.ceil(window.innerWidth/32)+2;
+const rows = ['grass','dirt','stone'];
+rows.forEach((type,ri)=>{
+  const row = document.createElement('div');
+  row.classList.add('ground-layer');
+  for(let c=0;c<cols;c++){
+    const b = document.createElement('div');
+    b.classList.add('block',`b-${type}`);
+    row.appendChild(b);
+  }
+  ground.appendChild(row);
+});
+
+// ─── FAKE ONLINE COUNT ───
+const onlineEl = document.getElementById('onlineCount');
+function fakeOnline(){
+  const n = 18 + Math.floor(Math.random()*15);
+  onlineEl.textContent = n;
+}
+fakeOnline();
+setInterval(()=>{
+  onlineEl.style.transition='opacity .3s';
+  onlineEl.style.opacity='0';
+  setTimeout(()=>{fakeOnline();onlineEl.style.opacity='1';},300);
+},8000);
+
+// ─── COPY IP ───
+const IP = 'play.orangetowny.kr';
+const toast = document.getElementById('toast');
+function copyIP(){
+  navigator.clipboard.writeText(IP).catch(()=>{});
+  toast.style.display='block';
+  setTimeout(()=>toast.style.display='none',2000);
+}
+
+// ─── SCROLL REVEAL ───
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting) e.target.classList.add('visible');
+  });
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+</script>
+</body>
+</html>
