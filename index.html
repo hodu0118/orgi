@@ -468,7 +468,7 @@ footer{
   </div>
 
   <div class="hero-content">
-    <div class="hero-badge">🍊 TOWNY SERVER · 1.20.x</div>
+    <div class="hero-badge">🍊 TOWNY SERVER · 1.21.8</div>
     <h1 class="hero-title">
       오렌지 타우니<br/><span>ORANGE TOWNY</span>
     </h1>
@@ -477,9 +477,9 @@ footer{
       <a href="#join" class="btn btn-primary">⚔️ 지금 참가하기</a>
       <a href="#features" class="btn btn-secondary">📖 서버 소개</a>
     </div>
-    <div class="online-bar">
-      <span class="online-dot"></span>
-      <span class="online-text">현재 접속 중: <span class="online-count" id="onlineCount">--</span> / 100</span>
+    <div class="online-bar" id="onlineBar">
+      <span class="online-dot" id="onlineDot"></span>
+      <span class="online-text" id="onlineText">서버 확인 중...</span>
     </div>
   </div>
 
@@ -537,26 +537,22 @@ footer{
     <div>
       <div class="info-box reveal">
         <div class="info-box-title">⚙️ 서버 스펙</div>
-        <div class="info-row"><span class="info-label">버전</span><span class="info-val orange">1.20.4</span></div>
-        <div class="info-row"><span class="info-label">서버 종류</span><span class="info-val">Paper Spigot</span></div>
-        <div class="info-row"><span class="info-label">최대 인원</span><span class="info-val">100명</span></div>
-        <div class="info-row"><span class="info-label">상태</span><span class="info-val green">🟢 온라인</span></div>
+        <div class="info-row"><span class="info-label">버전</span><span class="info-val orange" id="serverVersion">1.21.8</span></div>
+        <div class="info-row"><span class="info-label">서버 종류</span><span class="info-val">Paper</span></div>
+        <div class="info-row"><span class="info-label">상태</span><span class="info-val" id="serverStatus">🔄 확인 중</span></div>
         <div class="info-row"><span class="info-label">위치</span><span class="info-val">🇰🇷 한국 서울</span></div>
-        <div class="info-row"><span class="info-label">TPS</span><span class="info-val green">20.0</span></div>
       </div>
       <div class="info-box reveal" style="margin-top:1.5rem;">
         <div class="info-box-title">🧩 주요 플러그인</div>
-        <div class="info-row"><span class="info-label">도시 관리</span><span class="info-val">Towny Advanced</span></div>
-        <div class="info-row"><span class="info-label">경제</span><span class="info-val">Vault + EssentialsX</span></div>
-        <div class="info-row"><span class="info-label">상점</span><span class="info-val">ChestShop</span></div>
-        <div class="info-row"><span class="info-label">보호</span><span class="info-val">CoreProtect</span></div>
-        <div class="info-row"><span class="info-label">직업</span><span class="info-val">Jobs Reborn</span></div>
+        <div class="info-row"><span class="info-label">도시 관리</span><span class="info-val">Towny</span></div>
+        <div class="info-row"><span class="info-label">경제</span><span class="info-val">xConomy</span></div>
+        <div class="info-row"><span class="info-label">경제 API</span><span class="info-val">Vault</span></div>
       </div>
     </div>
     <div>
       <div class="copy-box reveal">
         <div class="info-box-title" style="text-align:center;">🍊 서버 주소</div>
-        <code class="copy-ip" onclick="copyIP()" id="ipText">play.orangetowny.kr</code>
+        <code class="copy-ip" onclick="copyIP()" id="ipText">krsmp.mcv.kr</code>
         <p class="copy-hint">클릭하면 복사됩니다</p>
       </div>
       <div class="info-box reveal" style="margin-top:1.5rem;">
@@ -603,7 +599,7 @@ footer{
 <footer>
   <div class="footer-logo">🍊 오렌지 타우니</div>
   <p class="footer-text">
-    Minecraft Server · play.orangetowny.kr<br/>
+    Minecraft Server · krsmp.mcv.kr<br/>
     © 2026 오렌지 타우니 — 이 서버는 Mojang과 무관합니다.<br/>
     <a href="#">디스코드</a> · <a href="#">공지사항</a> · <a href="#">후원</a>
   </p>
@@ -641,22 +637,44 @@ rows.forEach((type,ri)=>{
   ground.appendChild(row);
 });
 
-// ─── FAKE ONLINE COUNT ───
-const onlineEl = document.getElementById('onlineCount');
-function fakeOnline(){
-  const n = 18 + Math.floor(Math.random()*15);
-  onlineEl.textContent = n;
+// ─── SERVER STATUS (온라인/오프라인만) ───
+const SERVER_IP = 'krsmp.mcv.kr';
+const IP = SERVER_IP;
+const toast = document.getElementById('toast');
+
+async function fetchServerStatus() {
+  const dot = document.getElementById('onlineDot');
+  const text = document.getElementById('onlineText');
+  const statusEl = document.getElementById('serverStatus');
+
+  try {
+    const res = await fetch(`https://api.mcsrvstat.us/3/${SERVER_IP}`);
+    const data = await res.json();
+
+    if (data.online) {
+      dot.style.background = 'var(--green)';
+      dot.style.boxShadow = '0 0 8px var(--green)';
+      dot.style.animation = '';
+      text.innerHTML = '<span style="color:var(--green);">🟢 서버 온라인</span>';
+      statusEl.textContent = '🟢 온라인';
+      statusEl.style.color = 'var(--green)';
+    } else {
+      dot.style.background = '#e03030';
+      dot.style.boxShadow = '0 0 8px #e03030';
+      dot.style.animation = 'none';
+      text.innerHTML = '<span style="color:#e03030;">🔴 서버 오프라인</span>';
+      statusEl.textContent = '🔴 오프라인';
+      statusEl.style.color = '#e03030';
+    }
+  } catch(e) {
+    text.textContent = '상태 확인 실패';
+  }
 }
-fakeOnline();
-setInterval(()=>{
-  onlineEl.style.transition='opacity .3s';
-  onlineEl.style.opacity='0';
-  setTimeout(()=>{fakeOnline();onlineEl.style.opacity='1';},300);
-},8000);
+
+fetchServerStatus();
+setInterval(fetchServerStatus, 60000); // 1분마다 갱신
 
 // ─── COPY IP ───
-const IP = 'play.orangetowny.kr';
-const toast = document.getElementById('toast');
 function copyIP(){
   navigator.clipboard.writeText(IP).catch(()=>{});
   toast.style.display='block';
